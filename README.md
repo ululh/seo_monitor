@@ -1,3 +1,7 @@
+Simple script querying Google search daily with a list of keywords
+
+## MySQL as a backend
+
 Pull MySQL docker image :
 docker pull mysql
 
@@ -12,5 +16,6 @@ docker exec -it mdr-mysql bash
 cd /var/lib/mysql # /var/lib/mysql being the directory where the docker volume is mounted within the container
 then mysql -uroot -pxxxx < create_table_mdr.sql
 
+## Grafana
 Grafana : 
 docker run -d -p 3000:3030 grafana/grafana
