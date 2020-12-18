@@ -1,4 +1,6 @@
 **/output/
+out
 **/__pycache__/
 k
 keywords
+data/
