@@ -1,0 +1,12 @@
+version: '3.3'
+services:
+  collector:
+    image: snowplow/scala-stream-collector-kinesis:1.0.0
+    # the below "command" is the portion after the image name in the run command:
+    command: ["--config", "/snowplow/config/config.hocon"]
+    environment:
+      - AWS_CBOR_DISABLE=1
+    ports:
+      - "80:8080"
+    volumes:
+      - ./data/snowplow:/snowplow

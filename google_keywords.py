@@ -22,21 +22,24 @@ def populate(website, url, data, counter):
         data['rank_first_url'][website] = counter
         data['first_url'][website] = url
     else:
-        data['nb'][website] += 1
+        if data['nb'][website] == None:
+            data['nb'][website] = 1
+        else:
+            data['nb'][website] += 1
 
     return(data)
 
 today =  datetime.now().strftime('%Y%m%d')
 
-with open('keywords', "r") as fic:
+with open('k', "r") as fic:
     for kw in fic:
         keyword = kw.rstrip()
-        # reinit variables
+        # reinit variables, None is used instead of 0 so unfound does not create confusion in the graph
         counter = 0
         data['found'] =	{ "store": False, "fb": False, "pinterest": False, "instagram" : False }
-        data['nb'] =	{ "store": 0, "fb": 0, "pinterest": 0 , "instagram" : 0}
+        data['nb'] =	{ "store": None, "fb": None, "pinterest": None, "instagram" : None}
         data['first_url'] =	{ "store": "", "fb": "", "pinterest": "" , "instagram" : ""}
-        data['rank_first_url'] = { "store": 0, "fb": 0, "pinterest": 0 , "instagram" : 0}
+        data['rank_first_url'] = { "store": None, "fb": None, "pinterest": None , "instagram" : None}
 
         for url in search(keyword, tld="fr", lang="fr", num=15, stop=15, pause=5):
             counter += 1
@@ -60,4 +63,4 @@ for tag in ('store_rank_first_url', 'store_nb', 'fb_rank_first_url', 'fb_nb', 'p
     df[tag] = pandas.to_numeric(df[tag], errors='ignore', downcast='integer')
 column_order = ['date', 'keyword', 'store_rank_first_url', 'store_first_url', 'store_nb', 'fb_rank_first_url', 'fb_first_url', 'fb_nb', 'pinterest_rank_first_url', 'pinterest_first_url', 'pinterest_nb', 'instagram_rank_first_url', 'instagram_first_url', 'instagram_nb']
 
-df[column_order].to_csv('out', index=False)
+df[column_order].to_csv(f'ref_mdr_{today}.csv', index=False)
