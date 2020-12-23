@@ -1,11 +1,9 @@
-try:
-	from googlesearch import search
-except ImportError:
-	print("No module named 'google' found")
+from googlesearch import search
 
 from datetime import datetime
-import pandas
+import pandas as pd
 
+keywords_file = "keywords"
 # https://www.geeksforgeeks.org/performing-google-search-using-python-code/
 
 # pinterest derien3919
@@ -13,8 +11,9 @@ import pandas
 # instagram https://www.instagram.com/marine_minederien/
 
 data = {}
-df = pandas.DataFrame()
+df = pd.DataFrame()
 
+# gets a dict of dict and updates it 
 def populate(website, url, data, counter):
     if not data['found'][website] :
         data['found'][website] = True
@@ -31,8 +30,8 @@ def populate(website, url, data, counter):
 
 today =  datetime.now().strftime('%Y%m%d')
 
-with open('k', "r") as fic:
-    for kw in fic:
+with open(keywords_file, "r") as fd:
+    for kw in fd:
         keyword = kw.rstrip()
         # reinit variables, None is used instead of 0 so unfound does not create confusion in the graph
         counter = 0
@@ -41,7 +40,7 @@ with open('k', "r") as fic:
         data['first_url'] =	{ "store": "", "fb": "", "pinterest": "" , "instagram" : ""}
         data['rank_first_url'] = { "store": None, "fb": None, "pinterest": None , "instagram" : None}
 
-        for url in search(keyword, tld="fr", lang="fr", num=15, stop=15, pause=5):
+        for url in search(keyword, tld="fr", lang="fr", stop=15, pause=5):
             counter += 1
             if "minederien.net" in url:
                 data = populate("store", url, data, counter)
@@ -55,12 +54,17 @@ with open('k', "r") as fic:
             elif "marine_minederien" in url and "instagram" in url:
                 data = populate("instagram", url, data, counter)
 
-        row = {'date' : today, 'keyword' : keyword, 'store_rank_first_url' : data['rank_first_url']['store'], 'store_first_url' : data['first_url']["store"], 'store_nb' : data['nb']["store"], 'fb_rank_first_url' : data['rank_first_url']['fb'], 'fb_first_url' : data['first_url']["fb"], 'fb_nb' : data['nb']["fb"], 'pinterest_rank_first_url' : data['rank_first_url']['pinterest'], 'pinterest_first_url' : data['first_url']["pinterest"], 'pinterest_nb' : data['nb']['pinterest'], 'instagram_rank_first_url' : data['rank_first_url']['instagram'], 'instagram_first_url' : data['first_url']["instagram"], 'instagram_nb' : data['nb']['instagram']}
+        row = {'date' : today, 'keyword' : keyword, 'store_rank_first_url' : data['rank_first_url']['store'],
+            'store_first_url' : data['first_url']["store"], 'store_nb' : data['nb']["store"], 'fb_rank_first_url' : data['rank_first_url']['fb'],
+            'fb_first_url' : data['first_url']["fb"], 'fb_nb' : data['nb']["fb"], 'pinterest_rank_first_url' : data['rank_first_url']['pinterest'],
+            'pinterest_first_url' : data['first_url']["pinterest"], 'pinterest_nb' : data['nb']['pinterest'],
+            'instagram_rank_first_url' : data['rank_first_url']['instagram'], 'instagram_first_url' : data['first_url']["instagram"],
+            'instagram_nb' : data['nb']['instagram']
+        }
         df = df.append(row, ignore_index=True)
 
 # format dataframe for csv
-for tag in ('store_rank_first_url', 'store_nb', 'fb_rank_first_url', 'fb_nb', 'pinterest_rank_first_url', 'pinterest_nb', 'instagram_rank_first_url', 'instagram_nb'):
-    df[tag] = pandas.to_numeric(df[tag], errors='ignore', downcast='integer')
-column_order = ['date', 'keyword', 'store_rank_first_url', 'store_first_url', 'store_nb', 'fb_rank_first_url', 'fb_first_url', 'fb_nb', 'pinterest_rank_first_url', 'pinterest_first_url', 'pinterest_nb', 'instagram_rank_first_url', 'instagram_first_url', 'instagram_nb']
+column_order = ['date', 'keyword', 'store_rank_first_url', 'store_first_url', 'store_nb', 'fb_rank_first_url', 'fb_first_url', 'fb_nb',
+    'pinterest_rank_first_url', 'pinterest_first_url', 'pinterest_nb', 'instagram_rank_first_url', 'instagram_first_url', 'instagram_nb']
 
 df[column_order].to_csv(f'ref_mdr_{today}.csv', index=False)

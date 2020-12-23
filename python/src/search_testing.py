@@ -12,10 +12,9 @@ from datetime import datetime
 # instagram https://www.instagram.com/marine_minederien/
 
 today =  datetime.now().strftime('%Y%m%d')
-for i in (1,2,3):
-    with open('k', "r") as fic:
-        for kw in fic:
-            keyword = kw.rstrip()
-            for url in search(keyword, tld="fr", lang="fr", num=15, pause=5):
-                print(url)
-    print()
+with open('k', "r") as fic:
+    for kw in fic:
+        keyword = kw.rstrip()
+        for url in search(keyword, tld="fr", lang="fr", stop=15, pause=5):
+            print(f'{keyword} {url}')
+        print()

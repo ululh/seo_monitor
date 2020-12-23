@@ -1,7 +1,7 @@
 **/output/
 out
 **/__pycache__/
-k
-keywords
+**/k
+**/keywords*
 mots_marine
 data/

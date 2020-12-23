@@ -1,6 +1,6 @@
 # first stage
 FROM python:3.8 AS builder
-COPY python/requirements.txt .
+COPY ../python/requirements.txt .
 
 # install dependencies to the local user directory (eg. /root/.local)
 RUN pip install --user -r requirements.txt
@@ -11,10 +11,9 @@ WORKDIR /code
 
 # copy only the dependencies installation from the 1st stage image
 COPY --from=builder /root/.local /root/.local
-COPY ./python/src .
-COPY ./python/credentials/twitter_credentials.json .
+COPY ../python/src/google_keywords.py .
 
 # update PATH environment variable
 ENV PATH=/root/.local:$PATH
 
-CMD [ "python", "./twitter_collector.py" ] 
+CMD [ "python", "./google_keywords.py" ] 
