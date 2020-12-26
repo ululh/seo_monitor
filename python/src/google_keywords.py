@@ -67,4 +67,4 @@ with open(keywords_file, "r") as fd:
 column_order = ['date', 'keyword', 'store_rank_first_url', 'store_first_url', 'store_nb', 'fb_rank_first_url', 'fb_first_url', 'fb_nb',
     'pinterest_rank_first_url', 'pinterest_first_url', 'pinterest_nb', 'instagram_rank_first_url', 'instagram_first_url', 'instagram_nb']
 
-df[column_order].to_csv(f'ref_mdr_{today}.csv', index=False)
+df[column_order].to_csv(f'/app/ref_mdr_{today}.csv', index=False)

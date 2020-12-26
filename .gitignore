@@ -1,5 +1,6 @@
 **/output/
 out
+*.tar.gz
 **/__pycache__/
 **/k
 **/keywords*
