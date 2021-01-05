@@ -1,0 +1,35 @@
+version: "2.4"
+volumes:
+  grafana-mysql-data:
+    name: grafana-mysql-data
+services:
+  # Mysql for both Grafana conf and data
+  grafana-mysql:
+    image: ${MYSQL_DOCKER_IMAGE}:latest
+    volumes:
+      - grafana-mysql-data:/var/lib/mysql/
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${GRAFANA_MYSQL_USER}
+      - MYSQL_PASSWORD=${GRAFANA_MYSQL_PASSWORD}
+      - MYSQL_DATABASE=grafana
+    healthcheck:
+        test: mysqlshow -uroot -p${MYSQL_ROOT_PASSWORD} | grep grafana
+        timeout: 45s
+        interval: 10s
+        retries: 10
+  # Grafana Server
+  #
+  grafana:
+    image: ${GRAFANA_DOCKER_IMAGE}:latest
+    depends_on:
+      grafana-mysql:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_DATABASE_TYPE=mysql
+      - GF_DATABASE_HOST=grafana-mysql
+      - GF_DATABASE_NAME=grafana
+      - GF_DATABASE_USER=${GRAFANA_MYSQL_USER}
+      - GF_DATABASE_PASSWORD=${GRAFANA_MYSQL_PASSWORD}

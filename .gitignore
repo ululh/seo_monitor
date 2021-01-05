@@ -3,6 +3,7 @@ out
 *.tar.gz
 **/__pycache__/
 **/k
+**/.env
 **/keywords*
 mots_marine
 data/
