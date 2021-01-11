@@ -18,10 +18,12 @@ services:
         timeout: 45s
         interval: 10s
         retries: 10
+    cap_add:
+      - SYS_NICE  # CAP_SYS_NICE
   # Grafana Server
   #
   grafana:
-    image: ${GRAFANA_DOCKER_IMAGE}:latest
+    build: .
     depends_on:
       grafana-mysql:
         condition: service_healthy

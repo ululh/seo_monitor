@@ -4,6 +4,9 @@ out
 **/__pycache__/
 **/k
 **/.env
+**/grafana.ini
+**/fullchain.pem
+**/privkey.pem
 **/keywords*
 mots_marine
 data/
