@@ -8,18 +8,24 @@ services:
     image: ${MYSQL_DOCKER_IMAGE}:latest
     volumes:
       - grafana-mysql-data:/var/lib/mysql/
+        #- /mysql_scripts:${BUILD_ROOT}/grafana_mysql/mysql_scripts
+      - ${BUILD_ROOT}/grafana_mysql/mysql_scripts:/mysql_scripts
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_USER=${GRAFANA_MYSQL_USER}
       - MYSQL_PASSWORD=${GRAFANA_MYSQL_PASSWORD}
       - MYSQL_DATABASE=grafana
+    # so that grafana finds mysql ready with grafana database created
     healthcheck:
         test: mysqlshow -uroot -p${MYSQL_ROOT_PASSWORD} | grep grafana
         timeout: 45s
         interval: 10s
         retries: 10
+    # to avoid mbind error (??)
     cap_add:
       - SYS_NICE  # CAP_SYS_NICE
+    # to be able to load CSV files in database
+    command: ['--secure-file-priv=/var/lib/mysql/'] 
   # Grafana Server
   #
   grafana:

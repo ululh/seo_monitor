@@ -1,4 +1,7 @@
+CREATE DATABASE mdr;
+
 use mdr;
+
 create table mdr_seo(
    date DATE NOT NULL,
    keyword VARCHAR(50) NOT NULL,

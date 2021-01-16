@@ -1,6 +1,6 @@
 use mdr;
 
-LOAD DATA INFILE "/var/lib/mysql/CSVs/ref_mdr_20210112.csv" 
+LOAD DATA INFILE "/var/lib/mysql/CSVs/TOTO" 
 INTO TABLE mdr_seo 
 FIELDS TERMINATED BY ',' 
 LINES TERMINATED BY '\n'
