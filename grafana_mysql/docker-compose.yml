@@ -26,6 +26,7 @@ services:
       - SYS_NICE  # CAP_SYS_NICE
     # to be able to load CSV files in database
     command: ['--secure-file-priv=/var/lib/mysql/'] 
+    restart: always
   # Grafana Server
   #
   grafana:
@@ -35,6 +36,7 @@ services:
         condition: service_healthy
     ports:
       - "3000:3000"
+    restart: always
     environment:
       - GF_DATABASE_TYPE=mysql
       - GF_DATABASE_HOST=grafana-mysql
