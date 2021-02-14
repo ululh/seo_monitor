@@ -2,6 +2,7 @@ from googlesearch import search
 
 from datetime import datetime
 import pandas as pd
+import sqlalchemy
 
 keywords_file = "keywords"
 # https://www.geeksforgeeks.org/performing-google-search-using-python-code/
@@ -29,6 +30,7 @@ def populate(website, url, data, counter):
     return(data)
 
 today =  datetime.now().strftime('%Y%m%d')
+today_ts =  datetime.now().strftime('%Y-%m-%d 00:00:00')
 
 with open(keywords_file, "r") as fd:
     for kw in fd:
@@ -54,17 +56,22 @@ with open(keywords_file, "r") as fd:
             elif "marine_minederien" in url and "instagram" in url:
                 data = populate("instagram", url, data, counter)
 
-        row = {'date' : today, 'keyword' : keyword, 'store_rank_first_url' : data['rank_first_url']['store'],
-            'store_first_url' : data['first_url']["store"], 'store_nb' : data['nb']["store"], 'fb_rank_first_url' : data['rank_first_url']['fb'],
-            'fb_first_url' : data['first_url']["fb"], 'fb_nb' : data['nb']["fb"], 'pinterest_rank_first_url' : data['rank_first_url']['pinterest'],
-            'pinterest_first_url' : data['first_url']["pinterest"], 'pinterest_nb' : data['nb']['pinterest'],
-            'instagram_rank_first_url' : data['rank_first_url']['instagram'], 'instagram_first_url' : data['first_url']["instagram"],
-            'instagram_nb' : data['nb']['instagram']
+        row = {'date' : today_ts, 'keyword' : keyword, 'store_rank' : data['rank_first_url']['store'],
+            'store_first_url' : data['first_url']["store"], 'store_nb_occurences' : data['nb']["store"], 'facebook_rank' : data['rank_first_url']['fb'],
+            'facebook_first_url' : data['first_url']["fb"], 'facebook_nb_occurences' : data['nb']["fb"], 'pinterest_rank' : data['rank_first_url']['pinterest'],
+            'pinterest_first_url' : data['first_url']["pinterest"], 'pinterest_nb_occurences' : data['nb']['pinterest'],
+            'instagram_rank' : data['rank_first_url']['instagram'], 'instagram_first_url' : data['first_url']["instagram"],
+            'instagram_nb_occurences' : data['nb']['instagram']
         }
         df = df.append(row, ignore_index=True)
 
 # format dataframe for csv
-column_order = ['date', 'keyword', 'store_rank_first_url', 'store_first_url', 'store_nb', 'fb_rank_first_url', 'fb_first_url', 'fb_nb',
-    'pinterest_rank_first_url', 'pinterest_first_url', 'pinterest_nb', 'instagram_rank_first_url', 'instagram_first_url', 'instagram_nb']
+column_order = ['date', 'keyword', 'store_rank', 'store_first_url', 'store_nb_occurences', 'facebook_rank', 'facebook_first_url', 'facebook_nb_occurences',
+    'pinterest_rank', 'pinterest_first_url', 'pinterest_nb_occurences', 'instagram_rank', 'instagram_first_url', 'instagram_nb_occurences']
 
+# dump csv
 df[column_order].to_csv(f'/app/ref_mdr_{today}.csv', index=False)
+
+# load in database
+engine = sqlalchemy.create_engine('mysql+pymysql://grafana:graf@mysql@grafana_mysql_grafana-mysql_1/mdr?charset=utf8')
+df.to_sql(con=engine, name="mdr_seo", if_exists="append", index=False)

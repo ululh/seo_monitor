@@ -27,4 +27,5 @@ docker volume create google-mdr
 docker run -d \
   --name google_keywords \
   --mount source=google-mdr,target=/app \
+  --network grafana_mysql_default \
   seo_monitor/google_k_rpi:latest

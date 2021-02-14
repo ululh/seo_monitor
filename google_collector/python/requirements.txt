@@ -1,2 +1,6 @@
 google
 pandas
+sqlalchemy
+mysql-client
+PyMySQL
+cryptography

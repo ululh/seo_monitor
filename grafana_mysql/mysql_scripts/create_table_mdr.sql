@@ -2,8 +2,10 @@ CREATE DATABASE mdr;
 
 use mdr;
 
+GRANT ALL PRIVILEGES ON mdr.* TO grafana@'%';
+
 create table mdr_seo(
-   date DATE NOT NULL,
+   date DATETIME NOT NULL,
    keyword VARCHAR(50) NOT NULL,
    store_rank INT,
    store_first_url VARCHAR(400),
